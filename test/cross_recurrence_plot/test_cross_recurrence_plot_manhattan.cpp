@@ -65,7 +65,7 @@ void test_time_series_1(double* rp_time_series_1){
                               0.85742368, 0.46454358, 0.94522280, 0.19675130};
     bool found_error = false;
     int i;    
-    for(i = 0; i < 20; i++){
+    for(i = 0; i < 40; i++){
         if(time_series_1[i] != rp_time_series_1[i]){
             found_error = true;
             break;
@@ -92,7 +92,7 @@ void test_time_series_2(double* rp_time_series_2){
                               0.62618647, 0.93630790, 0.23854168};
     bool found_error = false;
     int i;    
-    for(i = 0; i < 20; i++){
+    for(i = 0; i < 39; i++){
         if(time_series_2[i] != rp_time_series_2[i]){
             found_error = true;
             break;
