@@ -376,9 +376,9 @@ void CrossRecurrencePlot::print_cross_distance_matrix(){
     cout << "=============================================" << endl;
     for (int i = 0; i < number_of_vectors_1; i++){
         for (int j = 0; j < number_of_vectors_2; j++){
-            printf("%.6f ", cross_distance_matrix[i][j]);
+            cout << cross_distance_matrix[i][j] << " ";
         }
-        printf("\n");
+        cout << endl;
     }    
 }
 
