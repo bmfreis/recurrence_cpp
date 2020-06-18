@@ -48,3 +48,9 @@ The class *RecurrenceQuantificationAnalysis* computes:
 - Entropy white vertical lines - Wentr
 - Ratio determinism recurrence rate - DET/RR
 - Ratio laminarity determinism - LAM/DET
+
+### Remarks
+
+Tested on 
+- Ubuntu: 18.04, 20.04
+- g++: 7.5.0, 9.3.0
