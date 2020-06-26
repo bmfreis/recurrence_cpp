@@ -11,7 +11,6 @@
  */
 RecurrenceQuantificationAnalysis::RecurrenceQuantificationAnalysis(int** matrix, 
                                         int size, int lmin, int vmin, int wmin){
-    cout << "construtor" << endl;
     calculateRQA(matrix, size, lmin, vmin, wmin);
 }
 
@@ -191,6 +190,9 @@ void RecurrenceQuantificationAnalysis::calculate_vertical_frequency_distribution
     int i, j, vertical_line_length;
     vertical_frequency_distribution = new int[number_of_vectors+1];
 
+    for (i = 0; i < number_of_vectors+1; i++)
+        vertical_frequency_distribution[i] = 0;
+
     for (i = 0; i < number_of_vectors; i++){
         vertical_line_length = 0;
         for (j = 0; j < number_of_vectors; j++){
@@ -211,6 +213,10 @@ void RecurrenceQuantificationAnalysis::calculate_vertical_frequency_distribution
 void RecurrenceQuantificationAnalysis::calculate_white_vertical_frequency_distribution(){
     int i, j, white_vertical_line_length;
     white_vertical_frequency_distribution = new int[number_of_vectors+1];
+
+    for(i = 0; i < number_of_vectors+1; i++)
+        white_vertical_frequency_distribution[i] = 0;                
+
 
     for (i = 0; i < number_of_vectors; i++){
         white_vertical_line_length = 0;
@@ -260,7 +266,8 @@ void RecurrenceQuantificationAnalysis::calculate_average_diagonal_line_length(){
 }
 
 void RecurrenceQuantificationAnalysis::calculate_longest_diagonal_line_length(){
-    for (int l = number_of_vectors-1; l >= 0; l--){
+    longest_diagonal_line_length = 0;
+    for (int l = number_of_vectors-1; l > 0; l--){
         if (diagonal_frequency_distribution[l] != 0){
             longest_diagonal_line_length = l;
             break;
@@ -269,7 +276,10 @@ void RecurrenceQuantificationAnalysis::calculate_longest_diagonal_line_length(){
 }
 
 void RecurrenceQuantificationAnalysis::calculate_divergence(){
-    divergence = 1.0 / longest_diagonal_line_length;    
+    if (longest_diagonal_line_length > 0)
+        divergence = 1.0 / longest_diagonal_line_length;
+    else
+        divergence = 0.0;    
 }   
 
 void RecurrenceQuantificationAnalysis::calculate_entropy_diagonal_lines(){
@@ -277,11 +287,13 @@ void RecurrenceQuantificationAnalysis::calculate_entropy_diagonal_lines(){
     for(int l = minimum_diagonal_line_length; l < number_of_vectors; l++)
         sum_diagonal_frequency_distribution += diagonal_frequency_distribution[l];
     entropy_diagonal_lines = 0.0;
-    for (int l = minimum_diagonal_line_length; l < number_of_vectors; l++){
-        if (diagonal_frequency_distribution[l] != 0)
-            entropy_diagonal_lines += (diagonal_frequency_distribution[l]/sum_diagonal_frequency_distribution) * log(diagonal_frequency_distribution[l]/sum_diagonal_frequency_distribution);
+    if (sum_diagonal_frequency_distribution > 0.0){
+        for (int l = minimum_diagonal_line_length; l < number_of_vectors; l++){
+            if (diagonal_frequency_distribution[l] != 0)
+                entropy_diagonal_lines += (diagonal_frequency_distribution[l]/sum_diagonal_frequency_distribution) * log(diagonal_frequency_distribution[l]/sum_diagonal_frequency_distribution);
+        }
+        entropy_diagonal_lines *= -1.0;    
     }
-    entropy_diagonal_lines *= -1.0;    
 }
 
 void RecurrenceQuantificationAnalysis::calculate_laminarity(){
@@ -305,7 +317,8 @@ void RecurrenceQuantificationAnalysis::calculate_average_vertical_line_length(){
 }
 
 void RecurrenceQuantificationAnalysis::calculate_longest_vertical_line_length(){
-    for (int v = number_of_vectors; v >= 0; v--){
+    longest_vertical_line_length = 0;
+    for (int v = number_of_vectors; v > 0; v--){
         if (vertical_frequency_distribution[v] != 0){
             longest_vertical_line_length = v;
             break;
@@ -318,11 +331,13 @@ void RecurrenceQuantificationAnalysis::calculate_entropy_vertical_lines(){
     for (int v = minimum_vertical_line_length; v < number_of_vectors+1; v++)
         sum_vertical_frequency_distribution += vertical_frequency_distribution[v];
     entropy_vertical_lines = 0.0;
-    for (int v = minimum_vertical_line_length; v < number_of_vectors+1; v++){
-        if (vertical_frequency_distribution[v] != 0)
-            entropy_vertical_lines += (vertical_frequency_distribution[v]/sum_vertical_frequency_distribution) * log(vertical_frequency_distribution[v]/sum_vertical_frequency_distribution);
+    if(sum_vertical_frequency_distribution > 0.0){
+        for (int v = minimum_vertical_line_length; v < number_of_vectors+1; v++){
+            if (vertical_frequency_distribution[v] != 0)
+                entropy_vertical_lines += (vertical_frequency_distribution[v]/sum_vertical_frequency_distribution) * log(vertical_frequency_distribution[v]/sum_vertical_frequency_distribution);
+        }
+        entropy_vertical_lines *= -1.0;    
     }
-    entropy_vertical_lines *= -1.0;    
 }
 
 void RecurrenceQuantificationAnalysis::calculate_average_white_vertical_line_length(){
@@ -336,7 +351,8 @@ void RecurrenceQuantificationAnalysis::calculate_average_white_vertical_line_len
 }
 
 void RecurrenceQuantificationAnalysis::calculate_longest_white_vertical_line_length(){
-    for (int w = number_of_vectors; w >= 0; w--){
+    longest_white_vertical_line_length = 0;
+    for (int w = number_of_vectors; w > 0; w--){
         if (white_vertical_frequency_distribution[w] != 0){
             longest_white_vertical_line_length = w;
             break;
@@ -349,11 +365,13 @@ void RecurrenceQuantificationAnalysis::calculate_entropy_white_vertical_lines(){
     for (int w = minimum_white_vertical_line_length; w < number_of_vectors+1; w++)
         sum_white_vertical_frequency_distribution += white_vertical_frequency_distribution[w];
     entropy_white_vertical_lines = 0.0;
-    for (int w = minimum_white_vertical_line_length; w < number_of_vectors+1; w++){
-        if (white_vertical_frequency_distribution[w] != 0)
-            entropy_white_vertical_lines += (white_vertical_frequency_distribution[w]/sum_white_vertical_frequency_distribution) * log(white_vertical_frequency_distribution[w]/sum_white_vertical_frequency_distribution);
-    }
-    entropy_white_vertical_lines *= -1.0;                
+    if (sum_white_vertical_frequency_distribution > 0.0){
+        for (int w = minimum_white_vertical_line_length; w < number_of_vectors+1; w++){
+            if (white_vertical_frequency_distribution[w] != 0)
+                entropy_white_vertical_lines += (white_vertical_frequency_distribution[w]/sum_white_vertical_frequency_distribution) * log(white_vertical_frequency_distribution[w]/sum_white_vertical_frequency_distribution);
+        }
+        entropy_white_vertical_lines *= -1.0;
+    }                
 }
 
 void RecurrenceQuantificationAnalysis::calculate_ratio_determinism_recurrence_rate(){
@@ -412,7 +430,6 @@ void RecurrenceQuantificationAnalysis::calculateRQA(int lmin, int vmin, int wmin
 
 void RecurrenceQuantificationAnalysis::calculateRQA(int** matrix, int size, 
                                                   int lmin, int vmin, int wmin){
-   cout << "calculate" << endl;
    set_recurrence_matrix(matrix, size);
    set_minimum_diagonal_line_length(lmin);
    set_minimum_vertical_line_length(vmin);
